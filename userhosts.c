@@ -33,7 +33,7 @@ static char *lookup_alias(const char *alias)
 {
 	char *ret = NULL;
 	FILE *hosts_file = NULL;
-	const char *hosts_file_env = getenv("HOSTS_FILE");
+	const char *hosts_file_env = getenv("HOSTS");
 	char *line = NULL;
 	size_t line_len;
 
@@ -42,23 +42,6 @@ static char *lookup_alias(const char *alias)
 
 	if (hosts_file_env) {
 		hosts_file = fopen(hosts_file_env, "r");
-	} else {
-		const char *relative_host_file_path = "/.hosts";
-		const char *home_env = getenv("HOME");
-		if (!home_env)
-			return NULL;
-
-		char *hosts_file_path = malloc(
-			strlen(home_env) + strlen(relative_host_file_path) + 1);
-		if (!hosts_file_path) {
-			return NULL;
-		}
-		strcpy(hosts_file_path, home_env);
-		strcat(hosts_file_path, relative_host_file_path);
-
-		hosts_file = fopen(hosts_file_path, "r");
-
-		free(hosts_file_path);
 	}
 
 	if (!hosts_file) {
